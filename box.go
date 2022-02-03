@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
+	"github.com/huandu/xstrings"
 	"github.com/mattn/go-runewidth"
 )
 
@@ -99,7 +100,12 @@ func (b Box) toString(title string, lines []string) string {
 	BottomBar := b.BottomLeft + Bar + b.BottomRight
 	// Check b.TitlePos
 	if b.TitlePos != inside {
-		TitleBar := repeatWithString(b.Horizontal, n-2, title)
+		var TitleBar string
+		if strings.Contains(title, "\t") {
+			TitleBar = repeatWithString(b.Horizontal, n-2, xstrings.ExpandTabs(title, 4))
+		} else {
+			TitleBar = repeatWithString(b.Horizontal, n-2, title)
+		}
 		switch b.TitlePos {
 		case "Top":
 			TopBar = b.TopLeft + TitleBar + b.TopRight
